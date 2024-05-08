@@ -35,7 +35,7 @@ const View = () => {
     fetchData();
   }, []);
   console.log(data, "ttttttttttdata");
-  const stripePromise = loadStripe("Publishable key");
+  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
   return (
     <div className="body-cont">

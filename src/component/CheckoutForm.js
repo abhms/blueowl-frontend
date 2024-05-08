@@ -27,39 +27,43 @@ const CheckoutForm = ({ id }) => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!stripe || !elements || !name) {
-      // Add additional checks as needed
-      console.log("Required information is missing.");
-      return;
-    }
+    try{
 
-    setLoading(true);
-    const cardElement = elements.getElement(CardElement);
-
-    const { data } = await axios.post(
-      "http://localhost:4242/create-payment-intent",
-      { amount: 1000, id }
-    );
-
-    const result = await stripe.confirmCardPayment(data.clientSecret, {
-      payment_method: {
-        card: cardElement,
-        billing_details: {
-          name: name,
-        },
-      },
-    });
-
-    if (result.error) {
-      console.log(result.error.message);
-    } else {
-      if (result.paymentIntent.status === "succeeded") {
-        console.log("Money is in the bank!");
+      event.preventDefault();
+      if (!stripe || !elements || !name) {
+        // Add additional checks as needed
+        console.log("Required information is missing.");
+        return;
       }
-    }
+  
+      setLoading(true);
+      const cardElement = elements.getElement(CardElement);
+  
+      const { data } = await axios.post("http://localhost:8000/payment", {
+        payment_amount: 1000,
+      });
+  
+      const result = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: name,
+          },
+        },
+      });
+  
+      if (result.error) {
+        console.log(result.error.message);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          console.log("Money is in the bank!");
+        }
+      }
+  
+      setLoading(false);
+    }catch{
 
-    setLoading(false);
+    }
   };
 
   return (
