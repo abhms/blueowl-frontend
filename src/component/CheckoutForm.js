@@ -38,8 +38,8 @@ const CheckoutForm = ({ id }) => {
   
       setLoading(true);
       const cardElement = elements.getElement(CardElement);
-  
-      const { data } = await axios.post("http://localhost:8000/payment", {
+      //by default amount is 1000 set but we can change according to reqirement 
+      const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_API}/payment`, {
         payment_amount: 1000,
       });
   
